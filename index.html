@@ -116,7 +116,7 @@ main{flex:1;display:flex;min-height:0}
 <body>
 <div id="app">
   <header>
-    <a class="brand" href="https://topvl.net" target="_blank" rel="noopener" title="NhảmStudio – topvl.net"><img data-logo alt="NhảmStudio"></a>
+    <a class="brand" href="https://topvl.net/video-maker/?utm_source=app&amp;utm_medium=logo" target="_blank" rel="noopener" title="NhảmStudio – topvl.net"><img data-logo alt="NhảmStudio"></a>
     <h1>Simple Video Maker</h1>
     <button id="bAbout" data-i18n="ℹ About"></button>
     <button id="bUndo" data-i18n="↶ Undo" data-i18n-title="Undo (Ctrl+Z)"></button>
@@ -165,9 +165,10 @@ main{flex:1;display:flex;min-height:0}
 <div id="about" hidden><div class="box">
   <div class="logo"><img data-logo alt="NhảmStudio"></div>
   <div class="body">
-    <h3>Simple Video Maker <span class="muted">v1.0</span></h3>
+    <h3>Simple Video Maker <span class="muted" id="aboutVer"></span></h3>
     <div class="muted" data-i18n="html.aboutDesc"></div>
-    <div style="margin-top:12px"><span data-i18n="Developed by"></span> <b>NhảmStudio</b><br>Website: <a href="https://topvl.net" target="_blank" rel="noopener">https://topvl.net</a></div>
+    <div style="margin-top:12px"><span data-i18n="Developed by"></span> <b>NhảmStudio</b><br>Website: <a href="https://topvl.net/video-maker/?utm_source=app&amp;utm_medium=about" target="_blank" rel="noopener">https://topvl.net</a></div>
+    <div class="muted" style="margin-top:10px;font-size:12px" data-i18n="html.statsNote"></div>
     <button id="aboutClose" style="margin-top:14px" data-i18n="Close"></button>
   </div>
 </div></div>
@@ -182,6 +183,27 @@ main{flex:1;display:flex;min-height:0}
 <script>
 'use strict';
 const $ = s => document.querySelector(s);
+const APP_VERSION = '1.1';
+const STATS_URL = 'https://topvl.net/ping.php';
+
+/* ---------- anonymous usage statistics (can be turned off in General settings) ---------- */
+function lsGet(k){ try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v){ try { localStorage.setItem(k, v); } catch (e) {} }
+const statsEnabled = () => lsGet('svm-stats') !== '0';
+function installId(){
+  let id = lsGet('svm-iid');
+  if (!id){ id = (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)); lsSet('svm-iid', id); }
+  return id;
+}
+// Sends only: random install id, event name, app version, desktop/web, UI language, exported video length.
+function ping(ev, extra){
+  if (!statsEnabled()) return;
+  try {
+    const body = JSON.stringify(Object.assign({ iid: installId(), ev, v: APP_VERSION, src: location.protocol === 'file:' ? 'desktop' : 'web', ui: lang }, extra || {}));
+    if (navigator.sendBeacon) navigator.sendBeacon(STATS_URL, new Blob([body], { type: 'text/plain' }));
+    else fetch(STATS_URL, { method: 'POST', body, mode: 'no-cors', keepalive: true });
+  } catch (e) {}
+}
 const HEAD = 180;
 
 /* ---------- i18n: English strings are the keys; VI holds the Vietnamese translations ---------- */
@@ -189,6 +211,7 @@ const HTML_EN = {
   'html.hint': 'Drag & drop images / videos / music here or onto the timeline below<br>or click <b>＋ Import files</b> on the left',
   'html.aboutDesc': 'A simple, free video maker that runs right in your browser.<br>Your images, videos and music are never uploaded to any server.',
   'html.exportNote': 'The video is recorded in real time, so exporting takes as long as the video itself. <b>Keep this tab visible</b> (do not minimize the window or switch tabs) until it finishes.',
+  'html.statsNote': 'The app sends anonymous usage counts (app opened, video exported, app version) to help improve it. Your photos, videos and music never leave your computer. You can turn this off in General settings.',
   'html.libEmpty': 'No files yet.<br>Click <b>＋ Import files</b> or drag & drop images, videos or music here.',
   'html.help': `1. <b>Import</b> images, videos and music into the library on the left.<br>
       2. <b>Drag</b> a file onto a timeline track, or click <b>＋</b> to append it to the selected track.<br>
@@ -203,6 +226,8 @@ const VI = {
   'html.hint': 'Kéo thả ảnh / video / nhạc vào đây hoặc vào timeline bên dưới<br>hoặc bấm <b>＋ Nhập file</b> ở bên trái',
   'html.aboutDesc': 'Công cụ làm video đơn giản, miễn phí, chạy ngay trên trình duyệt.<br>Ảnh, video, nhạc của bạn không bị tải lên bất kỳ server nào.',
   'html.exportNote': 'Video được ghi theo thời gian thực, nên thời gian xuất bằng độ dài video. <b>Hãy để tab này hiển thị</b> (không thu nhỏ cửa sổ hoặc chuyển tab) cho đến khi xong.',
+  'html.statsNote': 'App gửi số liệu sử dụng ẩn danh (mở app, xuất video, phiên bản) để cải thiện sản phẩm. Ảnh, video, nhạc của bạn không bao giờ rời khỏi máy. Bạn có thể tắt trong phần Cài đặt chung.',
+  'Send anonymous usage statistics':'Gửi thống kê sử dụng ẩn danh',
   'html.libEmpty': 'Chưa có file nào.<br>Bấm <b>＋ Nhập file</b> hoặc kéo thả ảnh, video, nhạc vào đây.',
   'html.help': `1. <b>Nhập file</b> ảnh, video, nhạc vào thư viện bên trái.<br>
       2. <b>Kéo</b> file vào một track trên timeline, hoặc bấm <b>＋</b> để thêm vào cuối track đang chọn.<br>
@@ -602,6 +627,7 @@ async function exportVideo(){
   rec.onstop = () => {
     exporting = false; $('#ov').hidden = true; render();
     if (cancelled) return;
+    ping('export', { dur: Math.round(td) });
     const blob = new Blob(chunks, { type: mime.split(';')[0] });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -911,10 +937,12 @@ function renderProps(){
       <div class="f"><label>${T('Video background color')}</label><input type="color" id="pBg"></div>
       <div class="f"><label>${T('Default duration per image (s)')}</label><input type="number" id="pImg" min="0.5" step="0.5"></div>
       <div class="f"><label>${T('Default transition')}</label><select id="pTr"></select></div>
+      <div class="f"><label title="${T('html.statsNote')}">${T('Send anonymous usage statistics')}</label><input type="checkbox" id="pStats"></div>
       <div class="sec">${T('Quick guide')}</div>
       <div class="tip">${T('html.help')}</div>
-      <div class="credit">Simple Video Maker v1.0 · Dev: <b>NhảmStudio</b><br><a href="https://topvl.net" target="_blank" rel="noopener">https://topvl.net</a></div>`;
+      <div class="credit">Simple Video Maker v${APP_VERSION} · Dev: <b>NhảmStudio</b><br><a href="https://topvl.net/video-maker/?utm_source=app&amp;utm_medium=help" target="_blank" rel="noopener">https://topvl.net</a></div>`;
     const bg = $('#pBg'); bg.value = S.bg; bg.oninput = () => { S.bg = bg.value; draw(); }; bg.onchange = () => commit(true);
+    const st = $('#pStats'); st.checked = statsEnabled(); st.onchange = () => lsSet('svm-stats', st.checked ? '1' : '0');
     const im = $('#pImg'); im.value = S.imgDur; im.onchange = () => { S.imgDur = Math.max(0.5, +im.value || 3); commit(true); };
     const ts = $('#pTr'); TRANS.forEach(([v, l]) => { const o = document.createElement('option'); o.value = v; o.textContent = T(l); ts.appendChild(o); });
     ts.value = S.defTrans; ts.onchange = () => { S.defTrans = ts.value; commit(true); };
@@ -1022,8 +1050,10 @@ window.addEventListener('resize', () => renderTimeline());
 /* ---------- init ---------- */
 document.querySelectorAll('img[data-logo]').forEach(i => i.src = document.querySelector('link[rel=icon]').href);
 applyStatic();
+$('#aboutVer').textContent = 'v' + APP_VERSION;
 renderLibrary();
 commit();
+ping('open');
 </script>
 </body>
 </html>

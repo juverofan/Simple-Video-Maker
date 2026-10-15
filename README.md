@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://topvl.net">🌐 topvl.net</a> · Developed by <b>NhảmStudio</b>
+  <a href="https://topvl.net/video-maker/"><b>⬇ Download</b></a> · <a href="https://topvl.net/video-maker/app.html">▶ Use online</a> · <a href="https://topvl.net">🌐 topvl.net</a> · Developed by <b>NhảmStudio</b>
 </p>
 
 ---
@@ -45,12 +45,13 @@ Everything runs **inside the user's browser**:
 - Images, videos and music are **never uploaded** to any server.
 - The exported video is saved **directly to the user's computer** (Downloads folder).
 - The server only serves one static HTML file, so it uses almost no resources.
+- **Anonymous usage statistics**: the app sends a random install ID, the event (app opened / video exported), the app version, the UI language and the exported video length to `https://topvl.net/ping.php`, so we can count real users. No file names, file contents or personal data are sent. Turn it off any time in **General settings → Send anonymous usage statistics** (or change `STATS_URL` if you host your own copy).
 
 ## 🚀 Getting started
 
 ### Run locally (offline)
 
-1. Download this repo (or just `index.html`).
+1. Download the packaged ZIP from [topvl.net/video-maker](https://topvl.net/video-maker/), this repo, or just `index.html`. Or [use it online](https://topvl.net/video-maker/app.html).
 2. Double-click `index.html` to open it in **Google Chrome** or **Microsoft Edge**.
 
 > `index.html` is a single self-contained file with the logo embedded. The `assets/` folder is only used by this README.
@@ -169,8 +170,11 @@ Mọi xử lý đều diễn ra **trong trình duyệt của người dùng**:
 - Ảnh, video, nhạc **không bao giờ bị tải lên server**.
 - File video xuất ra được lưu **thẳng vào máy người dùng** (thư mục Downloads).
 - Server chỉ phục vụ một file HTML tĩnh, nên gần như không tốn tài nguyên.
+- **Thống kê sử dụng ẩn danh**: app gửi mã cài đặt ngẫu nhiên, sự kiện (mở app / xuất video), phiên bản, ngôn ngữ giao diện và độ dài video xuất về `https://topvl.net/ping.php` để đếm người dùng thật. Không gửi tên file, nội dung file hay thông tin cá nhân. Có thể tắt bất cứ lúc nào ở **Cài đặt chung → Gửi thống kê sử dụng ẩn danh** (hoặc đổi `STATS_URL` nếu bạn tự host).
 
 ### 🚀 Sử dụng
+
+**Tải bản đóng gói:** [topvl.net/video-maker](https://topvl.net/video-maker/) · **Dùng online:** [topvl.net/video-maker/app.html](https://topvl.net/video-maker/app.html)
 
 **Chạy trên máy (offline):** tải repo về (hoặc chỉ cần file `index.html`), rồi bấm đúp để mở bằng **Google Chrome** hoặc **Microsoft Edge**.
 
